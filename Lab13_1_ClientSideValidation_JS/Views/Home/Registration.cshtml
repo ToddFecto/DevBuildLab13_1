@@ -16,8 +16,8 @@
     @ViewData["Message"]
 </div>
 
-<div id="message" class="warning"></div>
-<form id="RegistrationForm" method="post" action="/Home/RegistrationThankYou">
+
+<form novalidate id="RegistrationForm" method="post" action="/Home/RegistrationThankYou">
     <label for="First Name">First Name:</label>
     <input type="text" id="FirstName" name="FirstName" required /><span class="warning" id="FirstNameW"></span><br />
     <label for="Last Name">Last Name:</label>
@@ -25,16 +25,16 @@
     <label for="Email Address">Email Address:</label>
     <input type="email" id="EmailAddress" name="EmailAddress" required /><span class="warning" id="EmailW"></span><br />
     <label for="PhoneNumber">Phone Number:</label>
-    <input type="tel" id="PhoneNumber" name="PhoneNumber" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required /><small>Format: 123-456-7890</small><br />
+    <input type="tel" id="PhoneNumber" name="PhoneNumber" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required /><small>Format: 123-456-7890</small><span class="warning" id="PhoneNumberW"></span><br />
     <label for="Password">Password:</label>
     <input type="Password" id="Password" name="Password" pattern="(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*?[0-9])(?=.*?[~`!\x40#$%\^&*()\-_=+[\]{};:\x27.,\x22\\|/?><]).{8,}"
            title="Must match and contain at least one uppercase letter, one lowercase letter, one number, one special character, and be at least 8 or more characters" required /><span class="warning" id="PasswordW"></span><br />
     <label for="ConfirmPassword">Confirm Password:</label>
     <input type="Password" id="ConfirmPassword" name="ConfirmPassword" pattern="(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*?[0-9])(?=.*?[~`!\x40#$%\^&*()\-_=+[\]{};:\x27.,\x22\\|/?><]).{8,}"
-           title="Must match and contain at least one uppercase letter, one lowercase letter, one number, one special character, and be at least 8 or more characters" required /><br />
-    <input type="submit" value="Register" />
+           title="Must match and contain at least one uppercase letter, one lowercase letter, one number, one special character, and be at least 8 or more characters" required /><span class="warning" id="ConfirmPasswordW"></span><br />
+    <input type="submit" id="regsubmit" value="Register" />
 </form>
-    
+
 
 <script>
 
@@ -53,20 +53,20 @@
         let phoneNumber = document.querySelector('#PhoneNumber').value;
         let password = document.querySelector('#Password').value;
         let cpassword = document.querySelector('#ConfirmPassword').value;
-
+        
         //alert(n + c);    to test submit boxes
 
         let result = true;
 
         if (firstName.length < 2) {
             //alert('Please fill in all fields.');
-            document.querySelector('#FirstNameW').innerText = 'First name must have at least two characters.';
+            document.querySelector('#FirstNameW').innerHTML = 'First name must have at least two characters.';
             result = false;
         }
 
         if (lastName.length < 2) {
             //alert('Please fill in all fields.');
-            document.querySelector('#LastNameW').innerText = 'Last name must have at least two characters.';
+            document.querySelector('#LastNameW').innerHTML = 'Last name must have at least two characters.';
             result = false;
         }
 
@@ -76,15 +76,23 @@
             document.querySelector('#EmailW').innerHTML = 'Email must contain an @@ and a .';
             result = false;
         }
+
+        // if phone number does not contain 10 characters, flag as error
+        if (phoneNumber.indexOf('%-%-%') !== -1 || phoneNumber.length < 12) {
+            //we have an error
+            document.querySelector('#PhoneNumberW').innerHTML = 'Phone number must match format.';
+            result = false;
+        }
+
         if (password.length < 8) {
             //alert('Please fill in all fields.');
-            document.querySelector('#PasswordW').innerText = 'Password must have at least eight characters.';
+            document.querySelector('#PasswordW').innerHTML = 'Password must have at least eight characters.';
             result = false;
         }
 
         if (cpassword.length < 8) {
             //alert('Please fill in all fields.');
-            document.querySelector('#ConfirmPasswordW').innerText = 'Password must have at least eight characters.';
+            document.querySelector('#ConfirmPasswordW').innerHTML = 'Password must have at least eight characters.';
             result = false;
         }
 
@@ -96,10 +104,6 @@
         return result;
     }
 
-    function clearMessage() {
-        document.querySelector('#message').innerText = '';
-    }
-
     RegistrationForm.addEventListener('submit', function (ev) {
         if (validateForm() == false) {
             console.log('Validation failed, skipping submit');
@@ -107,22 +111,22 @@
         }
     });
 
+    function clearMessage() {
+        document.querySelector('#FirstNameW').innerHTML = '';
+        document.querySelector('#LastNameW').innerHTML = '';
+        document.querySelector('#EmailW').innerHTML = '';
+        document.querySelector('#PhoneNumberW').innerHTML = '';
+        document.querySelector('#PasswordW').innerHTML = '';
+        document.querySelector('#ConfirmPasswordW').innerHTML = '';
+    };
+
     let b = document.querySelector('#regsubmit');
-    b.addEventListener('click', ProcessForm);
+    b.addEventListener('click', validateForm);
 
     let t1 = document.querySelector('#regsubmit');
     t1.addEventListener('keypress', clearmessage);
 
-    let t2 = document.querySelector('#FirstName');
+    let t2 = document.querySelector('#FirstNameW');
     t2.addEventListener('keypress', clearmessage);
-    let t3 = document.querySelector('#LastName');
-    t3.addEventListener('keypress', clearmessage);
-    let t4 = document.querySelector('#EmailAddress');
-    t4.addEventListener('keypress', clearmessage);
-    let t5 = document.querySelector('#PhoneNumber');
-    t5.addEventListener('keypress', clearmessage);
-    let t6 = document.querySelector('#Password');
-    t6.addEventListener('keypress', clearmessage);
-    let t7 = document.querySelector('#ConfirmPassword');
-    t7.addEventListener('keypress', clearmessage);
+
 </script>

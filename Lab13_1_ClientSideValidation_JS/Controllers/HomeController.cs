@@ -62,7 +62,7 @@ namespace Lab13_1_ClientSideValidation_JS.Controllers
             }
         }
 
-        public IActionResult UseForm(string FirstName, string LastName)
+        public IActionResult DontUseForm(string FirstName, string LastName)
         {
             if (FirstName == null || LastName == null)
             {
